@@ -8,7 +8,6 @@ on:
       - master
 jobs:
   train-and-report:
-    if: needs.pr-check.outputs.number != null
     runs-on: ubuntu-latest
     permissions:
       contents: write
