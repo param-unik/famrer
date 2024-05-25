@@ -5,7 +5,7 @@ on:
       - master
 jobs:
   train-and-report:
-    if: github.event_name == 'pull_request'
+    if: needs.pr-check.outputs.number != null
     runs-on: ubuntu-latest
     permissions:
       contents: write
