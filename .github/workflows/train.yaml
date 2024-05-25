@@ -3,6 +3,9 @@ on:
   push:
     branches:
       - master
+  pull_request:
+    branches:
+      - master
 jobs:
   train-and-report:
     if: needs.pr-check.outputs.number != null
