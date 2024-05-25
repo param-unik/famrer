@@ -1,0 +1,36 @@
+name: farmers
+on:
+  push:
+    branches:
+      - master
+jobs:
+  train-and-report:
+    if: github.event.pull_request.merged
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      repository-projects: write
+    container: docker://ghcr.io/iterative/cml:0-dvc2-base1
+    steps:
+      - uses: actions/checkout@v3
+      - name: Train model
+        env:
+          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # ML workflow goes here
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          dvc repro 
+
+          # Model Metrics 
+          echo '### Model Metrics' >> report.md
+          git fetch --prune 
+          dvc metrics diff --show-md master  >> report.md 
+
+          echo '## Data Viz' >> report.md
+          echo '![](./by_region.png "By Region BarPlot)' >> report.md
+          cml comment create report.md
+
+          
+      
